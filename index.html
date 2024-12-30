@@ -1,0 +1,111 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <meta name="description" content="ZakPortfolio - Professional Video Editing Services">
+    <meta name="keywords" content="video editing, freelance video editor, video portfolio, professional editing">
+    <meta name="author" content="ZakPortfolio">
+    <title>ZakPortfolio | Video Editing Services</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f8f9fa; }
+        header { background-color: #000; color: #fff; text-align: center; padding: 20px; }
+        nav ul { list-style-type: none; padding: 0; margin: 0; display: flex; justify-content: center; background-color: #111; }
+        nav ul li { margin: 0 15px; }
+        nav ul li a { color: white; text-decoration: none; font-size: 1.2em; }
+        section { max-width: 1200px; margin: auto; padding: 20px; }
+        footer { background-color: #000; color: #fff; text-align: center; padding: 10px 0; }
+        .video-upload { text-align: center; margin-bottom: 20px; }
+        .video-gallery { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .video-item { position: relative; }
+        .video-item video { width: 100%; max-width: 400px; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ZakPortfolio</h1>
+        <p>Professional Video Editing Services</p>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+    <main>
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Welcome to ZakPortfolio! I am a professional video editor specializing in creating stunning visuals from raw footage.</p>
+        </section>
+        <section id="portfolio">
+            <h2>Portfolio</h2>
+            <div class="video-upload">
+                <h3>Upload Your Videos</h3>
+                <input type="file" id="videoInput" accept="video/*">
+                <button onclick="uploadVideo()">Upload</button>
+            </div>
+            <div class="video-gallery" id="videoGallery"></div>
+        </section>
+        <section id="contact">
+            <h2>Contact Me</h2>
+            <form action="mailto:abdulfatawuzakiw@gmail.com" method="post" enctype="text/plain">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" placeholder="Your Message" required></textarea>
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2024 ZakPortfolio. All rights reserved.</p>
+    </footer>
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-storage.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDl96I7HoiY_WT6NwceKBbfaivtPyO-Gf0",
+            authDomain: "zakportfolio-c5718.firebaseapp.com",
+            projectId: "zakportfolio-c5718",
+            storageBucket: "zakportfolio-c5718.appspot.com",
+            messagingSenderId: "379397084648",
+            appId: "1:379397084648:web:71eb1e23fbc5910d2c005d",
+            measurementId: "G-FQ4FPD7F11"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        // Upload video
+        function uploadVideo() {
+            const videoInput = document.getElementById('videoInput');
+            if (videoInput.files.length > 0) {
+                const file = videoInput.files[0];
+                const storageRef = ref(storage, `videos/${file.name}`);
+                uploadBytes(storageRef, file).then((snapshot) => {
+                    getDownloadURL(snapshot.ref).then((url) => {
+                        addVideoToGallery(url);
+                    });
+                });
+            } else {
+                alert('Please select a video to upload.');
+            }
+        }
+
+        // Add video to gallery
+        function addVideoToGallery(videoURL) {
+            const videoGallery = document.getElementById('videoGallery');
+            const videoElement = document.createElement('video');
+            videoElement.controls = true;
+            videoElement.src = videoURL;
+            videoGallery.appendChild(videoElement);
+        }
+    </script>
+</body>
+</html>
